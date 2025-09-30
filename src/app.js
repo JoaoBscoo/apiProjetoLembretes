@@ -9,6 +9,7 @@ import remindersRouter from './routes/reminders.routes.js';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './docs/swagger.js';
 
+
 // (opcional) se você tiver esses middlewares no projeto
 // import { notFound, errorHandler } from './middlewares/errorHandler.js';
 
@@ -35,8 +36,7 @@ app.get('/favicon.ico', (_req, res) => res.status(204).end());
 app.get('/docs.json', (_req, res) => res.json(swaggerSpec));
 
 // ---------- Swagger ----------
-import swaggerUi from 'swagger-ui-express';
-import { swaggerSpec } from './docs/swagger.js';
+
 
 // 1) expõe o JSON do OpenAPI (já vimos que está OK)
 app.get('/docs.json', (_req, res) => res.json(swaggerSpec));
