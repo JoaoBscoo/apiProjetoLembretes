@@ -17,6 +17,9 @@ app.use(morgan('dev'));
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.get('/', (_req, res) => res.json({ ok: true, message: 'Node REST Supabase API' }));
 
+app.get('/docs.json', (_req, res) => res.json(swaggerSpec)); // debug/uso pelo UI
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
+
 app.use('/api/users', usersRouter);
 app.use('/api/reminders', remindersRouter);
 
