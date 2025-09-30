@@ -34,20 +34,56 @@ app.get('/favicon.ico', (_req, res) => res.status(204).end());
 // 1) expõe o JSON do OpenAPI (útil para debug e para o UI carregar via fetch)
 app.get('/docs.json', (_req, res) => res.json(swaggerSpec));
 
-// 2) monta a UI apontando para a URL do JSON (mais confiável em serverless)
+// ---------- Swagger ----------
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './docs/swagger.js';
+
+// 1) expõe o JSON do OpenAPI (já vimos que está OK)
+app.get('/docs.json', (_req, res) => res.json(swaggerSpec));
+
+// 2) monta o UI apontando para a URL do JSON (evita problemas de serialização)
 app.use(
     '/docs',
     swaggerUi.serve,
     swaggerUi.setup(undefined, {
         explorer: true,
         swaggerOptions: {
-            url: '/docs.json',            // <- carrega o spec via fetch (evita tela branca)
+            url: '/docs.json',           // carrega o spec via fetch
             docExpansion: 'none',
             persistAuthorization: true,
+            displayRequestDuration: true,
         },
         customSiteTitle: 'Node REST Supabase API',
     })
 );
+
+app.get('/docs', (_req, res) => {
+    const html = `<!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8" />
+      <title>Node REST Supabase API</title>
+      <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
+      <style> body { margin:0; } </style>
+    </head>
+    <body>
+      <div id="swagger-ui"></div>
+      <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+      <script>
+        window.ui = SwaggerUIBundle({
+          url: '/docs.json',
+          dom_id: '#swagger-ui',
+          docExpansion: 'none',
+          persistAuthorization: true,
+          displayRequestDuration: true
+        });
+      </script>
+    </body>
+  </html>`;
+    res.setHeader('content-type', 'text/html; charset=utf-8');
+    res.send(html);
+});
+
 
 // ---------- Rotas da API ----------
 app.use('/api/users', usersRouter);
