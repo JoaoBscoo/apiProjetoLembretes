@@ -14,6 +14,12 @@ app.use(cors());
 app.use(express.json({ limit: '1mb' }));
 app.use(morgan('dev'));
 
+// debug: ver o JSON do spec no ar
+app.get('/docs.json', (_req, res) => res.json(swaggerSpec));
+
+// UI
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
+
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.get('/', (_req, res) => res.json({ ok: true, message: 'Node REST Supabase API' }));
 
