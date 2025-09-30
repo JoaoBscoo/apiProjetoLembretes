@@ -1,13 +1,24 @@
+// src/docs/swagger.js
 import swaggerJsdoc from 'swagger-jsdoc';
 import path from 'path';
 
 const routesGlob = path.join(process.cwd(), 'src', 'routes', '*.js');
 
-export const swaggerSpec = swaggerJsdoc({
-    definition: {
-        openapi: '3.0.0',
-        info: { title: 'Node REST Supabase API', version: '1.0.0' },
-        servers: [{ url: process.env.SWAGGER_SERVER_URL || 'http://localhost:3000' }],
-    },
-    apis: [routesGlob],
-});
+const baseDef = {
+    openapi: '3.0.0',
+    info: { title: 'Node REST Supabase API', version: '1.0.0' },
+    servers: [{ url: process.env.SWAGGER_SERVER_URL || 'http://localhost:3000' }],
+};
+
+let swaggerSpec = { ...baseDef, paths: {} };
+
+try {
+    const spec = swaggerJsdoc({ definition: baseDef, apis: [routesGlob] });
+    if (spec && typeof spec === 'object' && Object.keys(spec).length) {
+        swaggerSpec = spec;
+    }
+} catch (err) {
+    console.error('💥 Falhou ao gerar Swagger spec:', err);
+}
+
+export { swaggerSpec };
