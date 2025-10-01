@@ -6,7 +6,7 @@ const routesGlob = path.join(process.cwd(), 'src', 'routes', '*.js');
 
 const baseDef = {
     openapi: '3.0.0',
-    info: { title: 'Api - Lembretes', version: '1.0.0' },
+    info: { title: 'Api - Lembretes', version: '1.0.1' },
     servers: [{ url: process.env.SWAGGER_SERVER_URL || 'http://localhost:3000' }],
 };
 
