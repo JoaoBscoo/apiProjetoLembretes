@@ -18,7 +18,7 @@ app.use(express.json({ limit: '1mb' }));
 app.use(morgan('dev'));
 
 // Healthcheck
-app.get('/', (_req, res) => res.json({ ok: true, message: 'Node REST Supabase API' }));
+app.get('/', (_req, res) => res.json({ ok: true, message: 'Api de Lembretes - João' }));
 app.get('/favicon.ico', (_req, res) => res.status(204).end());
 
 // ---------- Swagger ----------
