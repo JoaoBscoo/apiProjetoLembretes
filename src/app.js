@@ -12,7 +12,7 @@ import { swaggerSpec } from './docs/swagger.js';
 const app = express();
 app.disable('x-powered-by');
 
-app.use(helmet({ contentSecurityPolicy: false })); // evita CSP bloquear a UI
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors());
 app.use(express.json({ limit: '1mb' }));
 app.use(morgan('dev'));
