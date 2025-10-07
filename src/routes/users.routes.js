@@ -19,7 +19,7 @@ const isPositiveInt = (n) => Number.isInteger(n) && n >= 0;
  *     Usuario:
  *       type: object
  *       properties:
- *         id:         { type: string, format: uuid }
+ *         id:         { type: integer}
  *         name:       { type: string }
  *         age:        { type: integer, minimum: 0 }
  *         profession: { type: string }
@@ -60,7 +60,7 @@ router.get('/', asyncHandler(async (_req, res) => {
  *       - in: path
  *         name: id
  *         required: true
- *         schema: { type: string, format: uuid }
+ *         schema: { type: integer }
  *     responses:
  *       200:
  *         description: Usuário encontrado
@@ -131,7 +131,7 @@ router.post('/', asyncHandler(async (req, res) => {
  *       - in: path
  *         name: id
  *         required: true
- *         schema: { type: string, format: uuid }
+ *         schema: { type: integer}
  *     requestBody:
  *       required: true
  *       content:
@@ -184,7 +184,7 @@ router.patch('/:id', asyncHandler(async (req, res) => {
  *       - in: path
  *         name: id
  *         required: true
- *         schema: { type: string, format: uuid }
+ *         schema: { type: integer}
  *     responses:
  *       204: { description: Excluído }
  *       404: { description: Usuário não encontrado }

@@ -23,7 +23,7 @@ const isPriority = (n) => Number.isInteger(n) && n >= 1 && n <= 5;
  *         id:          { type: string, format: uuid }
  *         description: { type: string }
  *         priority:    { type: integer, minimum: 1, maximum: 5 }
- *         user_id:     { type: string, format: uuid }
+ *         user_id:     { type: integer}
  *         time:        { type: string, example: "12:00", pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$" }
  */
 
@@ -36,7 +36,7 @@ const isPriority = (n) => Number.isInteger(n) && n >= 1 && n <= 5;
  *     parameters:
  *       - in: query
  *         name: user_id
- *         schema: { type: string, format: uuid }
+ *         schema: { type: integer }
  *     responses:
  *       200:
  *         description: Lista de lembretes
@@ -66,7 +66,7 @@ router.get('/', asyncHandler(async (req, res) => {
  *       - in: path
  *         name: id
  *         required: true
- *         schema: { type: string, format: uuid }
+ *         schema: { type: integer}
  *     responses:
  *       200:
  *         description: Lembrete
@@ -103,7 +103,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
  *             properties:
  *               description: { type: string }
  *               priority:    { type: integer, minimum: 1, maximum: 5 }
- *               user_id:     { type: string, format: uuid }
+ *               user_id:     { type: integer}
  *               time:        { type: string, example: "12:00", pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$" }
  *     responses:
  *       201:
@@ -144,7 +144,7 @@ router.post('/', asyncHandler(async (req, res) => {
  *       - in: path
  *         name: id
  *         required: true
- *         schema: { type: string, format: uuid }
+ *         schema: { type: integer}
  *     requestBody:
  *       required: true
  *       content:
@@ -154,7 +154,7 @@ router.post('/', asyncHandler(async (req, res) => {
  *             properties:
  *               description: { type: string }
  *               priority:    { type: integer, minimum: 1, maximum: 5 }
- *               user_id:     { type: string, format: uuid }
+ *               user_id:     { type: integer}
  *               time:        { type: string, example: "08:30", pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$" }
  *     responses:
  *       200:
@@ -206,7 +206,7 @@ router.patch('/:id', asyncHandler(async (req, res) => {
  *       - in: path
  *         name: id
  *         required: true
- *         schema: { type: string, format: uuid }
+ *         schema: { type: integer}
  *     responses:
  *       204: { description: Excluído }
  *       404: { description: Lembrete não encontrado }
