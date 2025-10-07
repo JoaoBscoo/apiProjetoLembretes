@@ -8,8 +8,8 @@ const isPositiveInt = (n) => Number.isInteger(n) && n >= 0;
 /**
  * @swagger
  * tags:
- *   nome: Usuários
- *   descricao: CRUD de Usuários
+ *   name: Usuários
+ *   description: CRUD de Usuários
  */
 
 /**
@@ -20,10 +20,10 @@ const isPositiveInt = (n) => Number.isInteger(n) && n >= 0;
  *       type: object
  *       properties:
  *         id:         { type: string, format: uuid }
- *         nome:       { type: string }
- *         idade:      { type: integer, minimum: 0 }
- *         profissao:  { type: string }
- *         criado:     { type: string, format: date-time }
+ *         name:       { type: string }
+ *         age:        { type: integer, minimum: 0 }
+ *         profession: { type: string }
+ *         created_at: { type: string, format: date-time }
  */
 
 /**
