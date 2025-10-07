@@ -54,7 +54,18 @@ app.get('/docs', (_req, res) => {
 });
 
 // ---------- Rotas ----------
-app.use('/api/users', usersRouter);
-app.use('/api/reminders', remindersRouter);
+app.use('/api/usuarios', usersRouter);
+app.use('/api/lembretes', remindersRouter);
+
+// Endpoint raiz da API
+app.get('/api', (req, res) => {
+  res.json({
+    name: 'API de Lembretes',
+    version: '1.0.0',
+    description: 'API RESTful desenvolvida com Node.js, Express e Supabase para gerenciamento de lembretes.',
+    author: 'João Bosco',
+    documentation: '/api-docs'
+  });
+});
 
 export default app;
