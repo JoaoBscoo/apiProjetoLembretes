@@ -20,7 +20,7 @@ const isPriority = (n) => Number.isInteger(n) && n >= 1 && n <= 5;
  *     Lembrete:
  *       type: object
  *       properties:
- *         id:          { type: string, format: uuid }
+ *         id:          { type: integer }
  *         description: { type: string }
  *         priority:    { type: integer, minimum: 1, maximum: 5 }
  *         user_id:     { type: integer}
