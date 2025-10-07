@@ -55,7 +55,7 @@ app.get('/docs', (_req, res) => {
 
 // ---------- Rotas ----------
 app.use('/api/users', usersRouter);
-app.use('/api/reminders', remindersRouter);
+app.use('/api/lembretes', remindersRouter);
 
 // Endpoint raiz da API
 app.get('/api', (req, res) => {
