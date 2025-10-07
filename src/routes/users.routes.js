@@ -178,7 +178,7 @@ router.patch('/:id', asyncHandler(async (req, res) => {
  * @swagger
  * /api/users/{id}:
  *   delete:
- *     summary: Excluir usuário (cascade nos lembretes, se FK tiver ON DELETE CASCADE)
+ *     summary: Excluir usuário 
  *     tags: [Usuários]
  *     parameters:
  *       - in: path
