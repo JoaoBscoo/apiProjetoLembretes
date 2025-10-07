@@ -22,7 +22,7 @@ const isPositiveInt = (n) => Number.isInteger(n) && n >= 0;
  *         id:         { type: string, format: uuid }
  *         name:       { type: string }
  *         age:        { type: integer, minimum: 0 }
- *         profissao: { type: string }
+ *         profissao:  { type: string }
  *         created_at: { type: string, format: date-time }
  */
 
