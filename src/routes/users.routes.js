@@ -108,9 +108,9 @@ router.get('/:id', asyncHandler(async (req, res) => {
  */
 router.post('/', asyncHandler(async (req, res) => {
     const { name, age, profession } = req.body || {};
-    if (!name) return res.status(400).json({ error: 'name é obrigatório' });
+    if (!name) return res.status(400).json({ error: 'nome é obrigatório' });
     if (age !== undefined && !isPositiveInt(Number(age))) {
-        return res.status(400).json({ error: 'age deve ser inteiro positivo' });
+        return res.status(400).json({ error: 'a idade deve ser inteiro maior que 0' });
     }
     const { data, error } = await supabase
         .from('users')
@@ -155,7 +155,7 @@ router.patch('/:id', asyncHandler(async (req, res) => {
     const { id } = req.params;
     const { name, age, profession } = req.body || {};
     if (age !== undefined && !isPositiveInt(Number(age))) {
-        return res.status(400).json({ error: 'age deve ser inteiro positivo' });
+        return res.status(400).json({ error: 'a idade deve ser inteiro maior que 0' });
     }
     const payload = {};
     if (name !== undefined) payload.name = name;

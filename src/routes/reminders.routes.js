@@ -115,8 +115,8 @@ router.get('/:id', asyncHandler(async (req, res) => {
  */
 router.post('/', asyncHandler(async (req, res) => {
     const { description, priority, user_id, time } = req.body || {};
-    if (!description) return res.status(400).json({ error: 'description é obrigatório' });
-    if (!Number.isInteger(priority) || !isPriority(priority)) return res.status(400).json({ error: 'priority deve ser 1..5' });
+    if (!description) return res.status(400).json({ error: 'descrição é obrigatório' });
+    if (!Number.isInteger(priority) || !isPriority(priority)) return res.status(400).json({ error: 'a prioridade deve ser de 1..5' });
     if (!user_id) return res.status(400).json({ error: 'user_id é obrigatório' });
     if (!timeRegex.test(time || '')) return res.status(400).json({ error: 'time deve ser HH:MM' });
 
