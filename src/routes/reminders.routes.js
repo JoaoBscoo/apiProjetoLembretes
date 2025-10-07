@@ -29,7 +29,7 @@ const isPriority = (n) => Number.isInteger(n) && n >= 1 && n <= 5;
 
 /**
  * @swagger
- * /api/reminders:
+ * /api/lembretes:
  *   get:
  *     summary: Listar lembretes (filtro opcional por user_id)
  *     tags: [Lembretes]
@@ -58,7 +58,7 @@ router.get('/', asyncHandler(async (req, res) => {
 
 /**
  * @swagger
- * /api/reminders/{id}:
+ * /api/lembretes/{id}:
  *   get:
  *     summary: Obter lembrete por ID
  *     tags: [Lembretes]
@@ -89,7 +89,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
 
 /**
  * @swagger
- * /api/reminders:
+ * /api/lembretes:
  *   post:
  *     summary: Criar lembrete
  *     tags: [Lembretes]
@@ -136,7 +136,7 @@ router.post('/', asyncHandler(async (req, res) => {
 
 /**
  * @swagger
- * /api/reminders/{id}:
+ * /api/lembretes/{id}:
  *   patch:
  *     summary: Atualizar lembrete (parcial)
  *     tags: [Lembretes]
@@ -198,7 +198,7 @@ router.patch('/:id', asyncHandler(async (req, res) => {
 
 /**
  * @swagger
- * /api/reminders/{id}:
+ * /api/lembretes/{id}:
  *   delete:
  *     summary: Excluir lembrete
  *     tags: [Lembretes]

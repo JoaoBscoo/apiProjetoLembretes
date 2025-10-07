@@ -28,7 +28,7 @@ const isPositiveInt = (n) => Number.isInteger(n) && n >= 0;
 
 /**
  * @swagger
- * /api/users:
+ * /api/usuarios:
  *   get:
  *     summary: Listar usuários
  *     tags: [Usuários]
@@ -52,7 +52,7 @@ router.get('/', asyncHandler(async (_req, res) => {
 
 /**
  * @swagger
- * /api/users/{id}:
+ * /api/usuarios/{id}:
  *   get:
  *     summary: Obter usuário por ID
  *     tags: [Usuários]
@@ -83,7 +83,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
 
 /**
  * @swagger
- * /api/users:
+ * /api/usuarios:
  *   post:
  *     summary: Criar usuário
  *     tags: [Usuários]
@@ -123,7 +123,7 @@ router.post('/', asyncHandler(async (req, res) => {
 
 /**
  * @swagger
- * /api/users/{id}:
+ * /api/usuarios/{id}:
  *   patch:
  *     summary: Atualizar usuário (parcial)
  *     tags: [Usuários]
@@ -176,7 +176,7 @@ router.patch('/:id', asyncHandler(async (req, res) => {
 
 /**
  * @swagger
- * /api/users/{id}:
+ * /api/usuarios/{id}:
  *   delete:
  *     summary: Excluir usuário 
  *     tags: [Usuários]
