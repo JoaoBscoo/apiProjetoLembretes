@@ -27,11 +27,11 @@ app.get('/docs.json', (_req, res) => res.json(swaggerSpec));
 
 // UI pelo CDN (não depende de swagger-ui-express)
 app.get('/docs', (_req, res) => {
-    const html = `<!doctype html>
+  const html = `<!doctype html>
   <html>
     <head>
       <meta charset="utf-8" />
-      <title>Node REST Supabase API</title>
+      <title>API - Lembretes</title>
       <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
       <style> html,body,#swagger-ui{height:100%} body{margin:0} </style>
     </head>
@@ -49,8 +49,8 @@ app.get('/docs', (_req, res) => {
       </script>
     </body>
   </html>`;
-    res.setHeader('content-type', 'text/html; charset=utf-8');
-    res.send(html);
+  res.setHeader('content-type', 'text/html; charset=utf-8');
+  res.send(html);
 });
 
 // ---------- Rotas ----------
