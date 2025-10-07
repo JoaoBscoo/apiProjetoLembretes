@@ -197,7 +197,7 @@ router.delete('/:id', asyncHandler(async (req, res) => {
         .eq('id', id);
     if (error) throw error;
     if (!count) return res.status(404).json({ error: 'Usuário não encontrado' });
-    res.status(204).send();
+    return res.status(200).json({ message: 'Usuário excluído com sucesso' });
 }));
 
 export default router;
