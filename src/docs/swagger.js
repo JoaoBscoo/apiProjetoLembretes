@@ -10,14 +10,37 @@ const baseDef = {
     servers: [{ url: process.env.SWAGGER_SERVER_URL || 'http://localhost:3000' }],
     components: {
         securitySchemes: {
-            bearerAuth: {
-                type: 'http',
-                scheme: 'bearer',
-                bearerFormat: 'JWT',
+            bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+        },
+        // ✅ ADICIONADO: schemas globais usados pelo /api/login
+        schemas: {
+            LoginRequest: {
+                type: 'object',
+                required: ['email', 'password'],
+                properties: {
+                    email: { type: 'string', example: 'joao@teste.com' },
+                    password: { type: 'string', example: '12345' },
+                },
+            },
+            LoginResponse: {
+                type: 'object',
+                properties: {
+                    message: { type: 'string', example: 'Login bem-sucedido' },
+                    token: { type: 'string', example: 'eyJhbGciOi...' },
+                    expiresIn: { type: 'string', example: '2h' },
+                    user: {
+                        type: 'object',
+                        properties: {
+                            id: { type: 'integer', example: 10 },
+                            name: { type: 'string', example: 'João Bosco' },
+                            email: { type: 'string', example: 'joao@teste.com' },
+                        },
+                    },
+                },
             },
         },
     },
-    // 👉 Deixe ativo se quiser exigir Bearer por padrão em TODAS as rotas:
+    // aplica Bearer globalmente; /api/login sobrescreve com security: []
     security: [{ bearerAuth: [] }],
 };
 
