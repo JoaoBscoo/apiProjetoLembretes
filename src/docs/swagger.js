@@ -5,9 +5,20 @@ import path from 'path';
 const routesGlob = path.join(process.cwd(), 'src', 'routes', '*.js');
 
 const baseDef = {
-    openapi: '3.0.0',
+    openapi: '3.0.3',
     info: { title: 'Api - Lembretes', version: '1.0.6' },
     servers: [{ url: process.env.SWAGGER_SERVER_URL || 'http://localhost:3000' }],
+    components: {
+        securitySchemes: {
+            bearerAuth: {
+                type: 'http',
+                scheme: 'bearer',
+                bearerFormat: 'JWT',
+            },
+        },
+    },
+    // 👉 Deixe ativo se quiser exigir Bearer por padrão em TODAS as rotas:
+    security: [{ bearerAuth: [] }],
 };
 
 let swaggerSpec = { ...baseDef, paths: {} };
