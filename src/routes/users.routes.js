@@ -1,3 +1,4 @@
+// src/routes/users.routes.js
 import { Router } from 'express';
 import { asyncHandler } from '../middlewares/asyncHandler.js';
 import { supabase } from '../db/supabase.js';
@@ -15,11 +16,16 @@ const isPositiveInt = (n) => Number.isInteger(n) && n >= 0;
 /**
  * @swagger
  * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
  *   schemas:
  *     Usuario:
  *       type: object
  *       properties:
- *         id:         { type: integer}
+ *         id:         { type: integer }
  *         name:       { type: string }
  *         age:        { type: integer, minimum: 0 }
  *         profession: { type: string }
@@ -31,6 +37,8 @@ const isPositiveInt = (n) => Number.isInteger(n) && n >= 0;
  * /api/usuarios:
  *   get:
  *     summary: Listar usuários
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Usuários]
  *     responses:
  *       200:
@@ -55,6 +63,8 @@ router.get('/', asyncHandler(async (_req, res) => {
  * /api/usuarios/{id}:
  *   get:
  *     summary: Obter usuário por ID
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Usuários]
  *     parameters:
  *       - in: path
@@ -86,6 +96,8 @@ router.get('/:id', asyncHandler(async (req, res) => {
  * /api/usuarios:
  *   post:
  *     summary: Criar usuário
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Usuários]
  *     requestBody:
  *       required: true
@@ -126,12 +138,14 @@ router.post('/', asyncHandler(async (req, res) => {
  * /api/usuarios/{id}:
  *   patch:
  *     summary: Atualizar usuário (parcial)
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Usuários]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         schema: { type: integer}
+ *         schema: { type: integer }
  *     requestBody:
  *       required: true
  *       content:
@@ -178,13 +192,15 @@ router.patch('/:id', asyncHandler(async (req, res) => {
  * @swagger
  * /api/usuarios/{id}:
  *   delete:
- *     summary: Excluir usuário 
+ *     summary: Excluir usuário
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Usuários]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         schema: { type: integer}
+ *         schema: { type: integer }
  *     responses:
  *       204: { description: Excluído }
  *       404: { description: Usuário não encontrado }

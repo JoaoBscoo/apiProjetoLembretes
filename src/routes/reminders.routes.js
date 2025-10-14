@@ -1,3 +1,4 @@
+// src/routes/reminders.routes.js
 import { Router } from 'express';
 import { asyncHandler } from '../middlewares/asyncHandler.js';
 import { supabase } from '../db/supabase.js';
@@ -16,6 +17,11 @@ const isPriority = (n) => Number.isInteger(n) && n >= 1 && n <= 5;
 /**
  * @swagger
  * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
  *   schemas:
  *     Lembrete:
  *       type: object
@@ -23,7 +29,7 @@ const isPriority = (n) => Number.isInteger(n) && n >= 1 && n <= 5;
  *         id:          { type: integer }
  *         description: { type: string }
  *         priority:    { type: integer, minimum: 1, maximum: 5 }
- *         user_id:     { type: integer}
+ *         user_id:     { type: integer }
  *         time:        { type: string, example: "12:00", pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$" }
  */
 
@@ -32,6 +38,8 @@ const isPriority = (n) => Number.isInteger(n) && n >= 1 && n <= 5;
  * /api/lembretes:
  *   get:
  *     summary: Listar lembretes (filtro opcional por user_id)
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Lembretes]
  *     parameters:
  *       - in: query
@@ -47,10 +55,14 @@ const isPriority = (n) => Number.isInteger(n) && n >= 1 && n <= 5;
  *               items: { $ref: '#/components/schemas/Lembrete' }
  */
 router.get('/', asyncHandler(async (req, res) => {
-    const { user_id } = req.query;
+    // ✅ Sem quebrar compat: se não vier user_id na query, usa o id do token (se existir)
+    const userFromToken = req.user?.id;
+    const userId = req.query.user_id ?? userFromToken;
+
     let q = supabase.from('reminders').select('id,description,priority,user_id,time');
-    if (user_id) q = q.eq('user_id', user_id);
+    if (userId) q = q.eq('user_id', userId);
     q = q.order('time', { ascending: true });
+
     const { data, error } = await q;
     if (error) throw error;
     res.json(data);
@@ -61,12 +73,14 @@ router.get('/', asyncHandler(async (req, res) => {
  * /api/lembretes/{id}:
  *   get:
  *     summary: Obter lembrete por ID
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Lembretes]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         schema: { type: integer}
+ *         schema: { type: integer }
  *     responses:
  *       200:
  *         description: Lembrete
@@ -82,6 +96,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
         .select('id,description,priority,user_id,time')
         .eq('id', id)
         .single();
+
     if (error?.code === 'PGRST116') return res.status(404).json({ error: 'Lembrete não encontrado' });
     if (error) throw error;
     res.json(data);
@@ -92,6 +107,8 @@ router.get('/:id', asyncHandler(async (req, res) => {
  * /api/lembretes:
  *   post:
  *     summary: Criar lembrete
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Lembretes]
  *     requestBody:
  *       required: true
@@ -103,7 +120,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
  *             properties:
  *               description: { type: string }
  *               priority:    { type: integer, minimum: 1, maximum: 5 }
- *               user_id:     { type: integer}
+ *               user_id:     { type: integer }
  *               time:        { type: string, example: "12:00", pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$" }
  *     responses:
  *       201:
@@ -115,21 +132,26 @@ router.get('/:id', asyncHandler(async (req, res) => {
  */
 router.post('/', asyncHandler(async (req, res) => {
     const { description, priority, user_id, time } = req.body || {};
+
     if (!description) return res.status(400).json({ error: 'descrição é obrigatório' });
     if (!Number.isInteger(priority) || !isPriority(priority)) return res.status(400).json({ error: 'a prioridade deve ser de 1..5' });
-    if (!user_id) return res.status(400).json({ error: 'user_id é obrigatório' });
+
+    // ✅ compat: se não vier user_id no body, usa o id do token (se existir)
+    const resolvedUserId = user_id ?? req.user?.id;
+    if (!resolvedUserId) return res.status(400).json({ error: 'user_id é obrigatório' });
     if (!timeRegex.test(time || '')) return res.status(400).json({ error: 'time deve ser HH:MM' });
 
     // garante usuário existente
-    const { data: u, error: ue } = await supabase.from('users').select('id').eq('id', user_id).single();
+    const { data: u, error: ue } = await supabase.from('users').select('id').eq('id', resolvedUserId).single();
     if (ue?.code === 'PGRST116' || !u) return res.status(400).json({ error: 'user_id não encontrado' });
     if (ue) throw ue;
 
     const { data, error } = await supabase
         .from('reminders')
-        .insert([{ description, priority, user_id, time }])
+        .insert([{ description, priority, user_id: resolvedUserId, time }])
         .select('id,description,priority,user_id,time')
         .single();
+
     if (error) throw error;
     res.status(201).json(data);
 }));
@@ -139,12 +161,14 @@ router.post('/', asyncHandler(async (req, res) => {
  * /api/lembretes/{id}:
  *   patch:
  *     summary: Atualizar lembrete (parcial)
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Lembretes]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         schema: { type: integer}
+ *         schema: { type: integer }
  *     requestBody:
  *       required: true
  *       content:
@@ -154,7 +178,7 @@ router.post('/', asyncHandler(async (req, res) => {
  *             properties:
  *               description: { type: string }
  *               priority:    { type: integer, minimum: 1, maximum: 5 }
- *               user_id:     { type: integer}
+ *               user_id:     { type: integer }
  *               time:        { type: string, example: "08:30", pattern: "^([01]\\d|2[0-3]):([0-5]\\d)$" }
  *     responses:
  *       200:
@@ -172,6 +196,7 @@ router.patch('/:id', asyncHandler(async (req, res) => {
     if (priority !== undefined && (!Number.isInteger(priority) || !isPriority(priority)))
         return res.status(400).json({ error: 'priority deve ser 1..5' });
     if (time !== undefined && !timeRegex.test(time)) return res.status(400).json({ error: 'time deve ser HH:MM' });
+
     if (user_id !== undefined) {
         const { data: u, error: ue } = await supabase.from('users').select('id').eq('id', user_id).single();
         if (ue?.code === 'PGRST116' || !u) return res.status(400).json({ error: 'user_id não encontrado' });
@@ -191,6 +216,7 @@ router.patch('/:id', asyncHandler(async (req, res) => {
         .eq('id', id)
         .select('id,description,priority,user_id,time')
         .single();
+
     if (error?.code === 'PGRST116') return res.status(404).json({ error: 'Lembrete não encontrado' });
     if (error) throw error;
     res.json(data);
@@ -201,12 +227,14 @@ router.patch('/:id', asyncHandler(async (req, res) => {
  * /api/lembretes/{id}:
  *   delete:
  *     summary: Excluir lembrete
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Lembretes]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         schema: { type: integer}
+ *         schema: { type: integer }
  *     responses:
  *       204: { description: Excluído }
  *       404: { description: Lembrete não encontrado }
@@ -217,6 +245,7 @@ router.delete('/:id', asyncHandler(async (req, res) => {
         .from('reminders')
         .delete({ count: 'exact' })
         .eq('id', id);
+
     if (error) throw error;
     if (!count) return res.status(404).json({ error: 'Lembrete não encontrado' });
     res.status(204).send();

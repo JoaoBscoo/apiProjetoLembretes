@@ -7,6 +7,11 @@ import morgan from 'morgan';
 import usersRouter from './routes/users.routes.js';
 import remindersRouter from './routes/reminders.routes.js';
 
+// 🔐 NOVO: rotas de autenticação (login)
+import authRouter from './routes/auth.js';
+// 🔐 NOVO: middleware de verificação do Bearer Token
+import { verificarToken } from './middleware/auth.js';
+
 import { swaggerSpec } from './docs/swagger.js';
 
 const app = express();
@@ -54,8 +59,12 @@ app.get('/docs', (_req, res) => {
 });
 
 // ---------- Rotas ----------
-app.use('/api/usuarios', usersRouter);
-app.use('/api/lembretes', remindersRouter);
+// 🔐 Login público (gera o token)
+app.use('/api', authRouter);              // /api/login
+
+// 🔐 Protege as rotas abaixo com Bearer Token
+app.use('/api/usuarios', verificarToken, usersRouter);
+app.use('/api/lembretes', verificarToken, remindersRouter);
 
 // Endpoint raiz da API
 app.get('/api', (req, res) => {
@@ -64,7 +73,7 @@ app.get('/api', (req, res) => {
     version: '1.0.0',
     description: 'API RESTful desenvolvida com Node.js, Express e Supabase para gerenciamento de lembretes.',
     author: 'João Bosco',
-    documentation: '/api-docs'
+    documentation: '/docs'
   });
 });
 
