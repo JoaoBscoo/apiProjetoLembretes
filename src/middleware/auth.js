@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 const SECRET = process.env.JWT_SECRET || "dev-secret";
-const EXPIRES_IN = process.env.JWT_EXPIRES_IN || "2h";
+const EXPIRES_IN = process.env.JWT_EXPIRES_IN;
 
 export function gerarToken(payload) {
     // inclua apenas o essencial no payload
